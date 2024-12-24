@@ -80,13 +80,36 @@ router.post(
             "Incomelpete details! Please provide all the details to add project.",
         });
       }
-      await db("projects").insert({ user_id, name, description, status });
+      const result = await db("projects").insert({
+        user_id,
+        name,
+        description,
+        status,
+      });
+      console.log(result);
       res.status(200).json({ message: "Project added successfully!" });
-    } catch (error) {
-      res.status(500).json({ message: "Could not add project!" });
+    } catch (error: any) {
+      res
+        .status(500)
+        .json({ message: "Could not add project!", error: error.sqlMessage });
     }
   }
 );
+
+router.get("/get-project/:project_id", verifyToken, async (req, res) => {
+  const { project_id } = req.params;
+  const result = await db("projects")
+    .select("*")
+    .where("project_id", project_id)
+    .first();
+  if (result) {
+    return res.status(200).send(result);
+  } else {
+    res
+      .status(404)
+      .json({ message: `No Project found with ID: ${project_id}` });
+  }
+});
 
 router.delete("/delete-project", verifyToken, async (req, res) => {
   try {
@@ -101,6 +124,48 @@ router.delete("/delete-project", verifyToken, async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Error deleting project!" });
     console.log(error);
+  }
+});
+
+router.post("/project-timestamp", verifyToken, async (req, res) => {
+  try {
+    const { user_id, project_id, start_time, end_time, description } = req.body;
+    if (!user_id || !project_id || !start_time || !end_time || !description) {
+      return res.status(400).json({
+        message:
+          "Incomelpete details! Please provide all the details to add timestamp in the project.",
+      });
+    }
+    const user = await db("user_data").where("user_id", user_id).first();
+    if (!user) {
+      return res.status(404).json({
+        message: `User with ID ${user_id} does not exist.`,
+      });
+    }
+
+    const project = await db("projects")
+      .where("project_id", project_id)
+      .first();
+    if (!project) {
+      return res.status(404).json({
+        message: `Project with ID ${project_id} does not exist.`,
+      });
+    }
+
+    await db("time_entries").insert({
+      user_id,
+      project_id,
+      start_time,
+      end_time,
+      description,
+    });
+    res.status(200).json({
+      message: `Timestamp for Project with ID : ${project_id} inserted!`,
+    });
+  } catch (error: any) {
+    res
+      .status(500)
+      .json({ message: "Error adding timestamp!", error: error.sqlMessage });
   }
 });
 
