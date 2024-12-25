@@ -18,7 +18,8 @@ router.get("/", async (req: Request, res: Response) => {
     messgae: "Welcome to the time tracker API!",
     description:
       "A RESTful API to help freelancers track time spent on projects and generate work summaries.",
-    routes: "TBD!",
+    routes:
+      "'/', '/add-user', '/verify-user', '/get-project/:project_id', '/delete-project', '/project-timestamp', '/get-summary/:project_id', '/get-summary'",
   });
 });
 
@@ -88,8 +89,11 @@ router.post(
         description,
         status,
       });
-      console.log(result);
-      res.status(200).json({ message: "Project added successfully!" });
+      // console.log(result);
+      res.status(200).json({
+        message: "Project added successfully!",
+        project_id: result[0],
+      });
     } catch (error: any) {
       res
         .status(500)
@@ -123,6 +127,28 @@ router.delete(
   async (req: Request, res: Response) => {
     try {
       const { project_id } = req.body;
+      const user_id = req.user?.user_id;
+      if (!user_id) {
+        res.status(401).json({ message: "User not authenticated" });
+        return;
+      }
+      const project = await db("projects")
+        .where("project_id", project_id)
+        .first();
+
+      if (!project) {
+        res
+          .status(404)
+          .json({ message: `No Project found with ID: ${project_id}` });
+        return;
+      }
+      if (project.user_id !== user_id) {
+        res.status(403).json({
+          message: `User with ID: ${user_id} does not have permission to delete this project.`,
+        });
+        return;
+      }
+
       const deleted = await db("projects")
         .where("project_id", project_id)
         .del();
@@ -167,6 +193,17 @@ router.post(
         return res.status(404).json({
           message: `Project with ID ${project_id} does not exist.`,
         });
+      }
+
+      const projUser = await db("projects")
+        .select("user_id")
+        .where("project_id", project_id)
+        .first();
+      if (user_id !== projUser) {
+        res.status(401).json({
+          message: `User with ID: ${user_id} does not has access to project with ID: ${project_id}!`,
+        });
+        return;
       }
 
       await db("time_entries").insert({
@@ -233,6 +270,52 @@ router.get("/get-summary/:project_id", async (req: Request, res: Response) => {
   // console.log(csv);
   res.header("Content-Type", "text/csv");
   res.attachment("summary.csv");
+  res.status(200).send(csv);
+});
+
+router.get("/get-summary", async (req: Request, res: Response) => {
+  const projects = await db("projects").select("*");
+  if (!projects || projects.length === 0) {
+    res.status(404).json({ message: "No projects found." });
+    return;
+  }
+
+  const summaries = [];
+  for (const project of projects) {
+    const timestamps = await db("time_entries")
+      .select("start_time", "end_time")
+      .where("project_id", project.project_id);
+
+    if (!timestamps) {
+      summaries.push({
+        ...project,
+        "Total time spent": "0 hours 0 minutes",
+      });
+      continue;
+    }
+    const result = await db("time_entries")
+      .select(
+        db.raw(
+          "SUM(TIMESTAMPDIFF(SECOND, start_time, end_time) / 3600) as total_hours"
+        )
+      )
+      .where("project_id", project.project_id)
+      .as("total_hours");
+
+    const totalHours = result[0].total_hours;
+    const hours = Math.floor(totalHours);
+    const minutes = Math.round((totalHours - hours) * 60);
+
+    summaries.push({
+      ...project,
+      "Total time spent": `${hours} hours ${minutes} minutes`,
+    });
+  }
+
+  const parser = new Parser();
+  const csv = parser.parse(summaries);
+  res.header("Content-Type", "text/csv");
+  res.attachment("project_summaries.csv");
   res.status(200).send(csv);
 });
 
