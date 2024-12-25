@@ -11,7 +11,7 @@ app.use("/", router);
 app.use(
   "/",
   (err: ErrorEvent, req: Request, res: Response, next: NextFunction) => {
-    res.status(404).json("Oops, Something Bad Happened!");
+    res.status(500).json("Oops, Something Bad Happened!");
     console.log(err);
   }
 );
