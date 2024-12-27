@@ -12,6 +12,7 @@ const verifyToken = (req: CustomRequest, res: Response, next: NextFunction) => {
     return res.status(401).json({ message: "No token provided!" });
   }
   try {
+    //@ts-ignore
     const user = jwt.verify(token, process.env.JWT_KEY);
     req.user = user;
     next();

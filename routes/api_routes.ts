@@ -10,6 +10,9 @@ configDotenv();
 
 const router = express.Router();
 const { db, checkConnection } = dbMod;
+interface MyRequest extends Request {
+  user?: any;
+}
 
 checkConnection();
 
@@ -60,6 +63,7 @@ router.post("/verify-user", async (req: Request, res: Response) => {
   }
   const validPass = await bcrypt.compare(Password, user.Password);
   if (validPass) {
+    //@ts-ignore
     const token = jwt.sign({ user_id: user.user_id }, process.env.JWT_KEY, {
       expiresIn: "1h",
     });
@@ -73,6 +77,7 @@ router.post("/verify-user", async (req: Request, res: Response) => {
 
 router.post(
   "/create-project",
+  //@ts-ignore
   verifyToken,
   async (req: Request, res: Response) => {
     try {
@@ -104,6 +109,7 @@ router.post(
 
 router.get(
   "/get-project/:project_id",
+  //@ts-ignore
   verifyToken,
   async (req: Request, res: Response) => {
     const { project_id } = req.params;
@@ -123,8 +129,9 @@ router.get(
 
 router.delete(
   "/delete-project",
+  //@ts-ignore
   verifyToken,
-  async (req: Request, res: Response) => {
+  async (req: MyRequest, res: Response) => {
     try {
       const { project_id } = req.body;
       const user_id = req.user?.user_id;
@@ -168,6 +175,7 @@ router.delete(
 
 router.post(
   "/project-timestamp",
+  //@ts-ignore
   verifyToken,
   async (req: Request, res: Response) => {
     try {
