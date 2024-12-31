@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import { configDotenv } from "dotenv";
 import verifyToken from "../middleware/auth.js";
 import { Parser } from "@json2csv/plainjs";
+import moment from "moment";
 
 configDotenv();
 
@@ -174,26 +175,110 @@ router.delete(
 );
 
 router.post(
-  "/project-timestamp",
+  "/create-project-task",
+  //@ts-ignore
+  verifyToken,
+  async (req: MyRequest, res: Response) => {
+    try {
+      const user_id = req.user.user_id;
+      const { project_id, task_description, start_time, end_time } = req.body;
+      if (!project_id || !task_description || !start_time || !end_time) {
+        return res.status(400).json({
+          message:
+            "Incomelpete details! Please provide all the details to create task in the project.",
+        });
+      }
+      const proj_user = await db("projects")
+        .select("user_id")
+        .where("project_id", project_id)
+        .first();
+      if (!proj_user) {
+        res
+          .status(404)
+          .json({ message: `No project found with ID: ${project_id}.` });
+        return;
+      }
+      if (proj_user.user_id !== user_id) {
+        res.status(401).json({
+          message: `User with ID: ${user_id} does not have access to project with ID: ${project_id}.`,
+        });
+        return;
+      }
+      const task = await db("proj_tasks").insert({
+        project_id,
+        user_id,
+        task_description,
+        start_time,
+        end_time,
+      });
+      res
+        .status(200)
+        .json({ message: "Task created successfully!", task_id: task[0] });
+    } catch (error: any) {
+      res
+        .status(500)
+        .json({ message: "Could not add task!", error: error.sqlMessage });
+    }
+  }
+);
+
+router.get(
+  "/get-project/:project_id/tasks",
   //@ts-ignore
   verifyToken,
   async (req: Request, res: Response) => {
+    const { project_id } = req.params;
+    if (project_id === ":project_id") {
+      res.status(400).json({ message: "No project ID Provided!" });
+      return;
+    }
+    const result = await db("proj_tasks")
+      .select("*")
+      .where("project_id", project_id)
+      .first();
+    result.start_time = moment(result.start_time)
+      .local()
+      .format("YYYY-MM-DD HH:mm:ss");
+    result.end_time = moment(result.end_time)
+      .local()
+      .format("YYYY-MM-DD HH:mm:ss");
+    if (result) {
+      res.status(200).send(result);
+    } else {
+      res.status(404).json({
+        message: `No Tasks found with for project with ID: ${project_id}`,
+      });
+    }
+  }
+);
+
+router.post(
+  "/project-task-timestamp",
+  //@ts-ignore
+  verifyToken,
+  async (req: MyRequest, res: Response) => {
     try {
-      const { user_id, project_id, start_time, end_time, description } =
+      const user_id = req.user.user_id;
+      const { task_id, project_id, start_time, end_time, description } =
         req.body;
-      if (!user_id || !project_id || !start_time || !end_time || !description) {
+      if (
+        !task_id ||
+        !user_id ||
+        !project_id ||
+        !start_time ||
+        !end_time ||
+        !description
+      ) {
         return res.status(400).json({
           message:
             "Incomelpete details! Please provide all the details to add timestamp in the project.",
         });
       }
-      const user = await db("user_data").where("user_id", user_id).first();
-      if (!user) {
+      if (!user_id) {
         return res.status(404).json({
           message: `User with ID ${user_id} does not exist.`,
         });
       }
-
       const project = await db("projects")
         .where("project_id", project_id)
         .first();
@@ -207,22 +292,33 @@ router.post(
         .select("user_id")
         .where("project_id", project_id)
         .first();
-      if (user_id !== projUser) {
+      if (user_id !== projUser.user_id) {
         res.status(401).json({
           message: `User with ID: ${user_id} does not has access to project with ID: ${project_id}!`,
         });
         return;
       }
+      const task = await db("proj_tasks")
+        .select("task_id")
+        .where("project_id", project_id)
+        .first();
+      if (!task) {
+        res.status(404).json({
+          message: `Task with ID: ${task_id} does not exist on project with ID: ${project_id}!`,
+        });
+        return;
+      }
 
       await db("time_entries").insert({
-        user_id,
         project_id,
+        task_id,
+        user_id,
         start_time,
         end_time,
         description,
       });
       res.status(200).json({
-        message: `Timestamp for Project with ID : ${project_id} inserted!`,
+        message: `Timestamp for Task with ID : ${task_id} inserted!`,
       });
     } catch (error: any) {
       res
@@ -244,6 +340,14 @@ router.get("/get-summary/:project_id", async (req: Request, res: Response) => {
       .json({ message: `No project found with ID: ${project_id}` });
     return;
   }
+
+  project.start_time = moment(project.start_time)
+    .local()
+    .format("YYYY-MM-DD HH:mm:ss");
+  project.end_time = moment(project.end_time)
+    .local()
+    .format("YYYY-MM-DD HH:mm:ss");
+
   const timestamps = await db("time_entries")
     .select("start_time", "end_time")
     .where("project_id", project_id);
@@ -293,7 +397,13 @@ router.get("/get-summary", async (req: Request, res: Response) => {
     const timestamps = await db("time_entries")
       .select("start_time", "end_time")
       .where("project_id", project.project_id);
-
+    project.start_time = moment(project.start_time)
+      .local()
+      .format("YYYY-MM-DD HH:mm:ss");
+    project.end_time = moment(project.end_time)
+      .local()
+      .format("YYYY-MM-DD HH:mm:ss");
+    
     if (!timestamps) {
       summaries.push({
         ...project,
