@@ -21,9 +21,7 @@
   "paths": {
     "/": {
       "get": {
-        "tags": [
-          "APIs"
-        ],
+        "tags": ["APIs"],
         "summary": "Home",
         "responses": {
           "200": {
@@ -37,9 +35,7 @@
     },
     "/get-project/{project_id}": {
       "get": {
-        "tags": [
-          "APIs"
-        ],
+        "tags": ["APIs"],
         "summary": "Get Project By ID",
         "security": [
           {
@@ -69,9 +65,7 @@
     },
     "/get-summary/{project_id}": {
       "get": {
-        "tags": [
-          "APIs"
-        ],
+        "tags": ["APIs"],
         "summary": "Get Summary by Project_ID",
         "parameters": [
           {
@@ -96,9 +90,7 @@
     },
     "/get-summary": {
       "get": {
-        "tags": [
-          "APIs"
-        ],
+        "tags": ["APIs"],
         "summary": "Get Summary of All Projects",
         "responses": {
           "200": {
@@ -112,9 +104,7 @@
     },
     "/get-project/{project_id}/tasks": {
       "get": {
-        "tags": [
-          "APIs"
-        ],
+        "tags": ["APIs"],
         "summary": "Get Project Tasks",
         "security": [
           {
@@ -144,9 +134,7 @@
     },
     "/add-user": {
       "post": {
-        "tags": [
-          "APIs"
-        ],
+        "tags": ["APIs"],
         "summary": "Add User",
         "requestBody": {
           "content": {
@@ -174,9 +162,7 @@
     },
     "/verify-user": {
       "post": {
-        "tags": [
-          "APIs"
-        ],
+        "tags": ["APIs"],
         "summary": "Verify User",
         "requestBody": {
           "content": {
@@ -203,9 +189,7 @@
     },
     "/create-project": {
       "post": {
-        "tags": [
-          "APIs"
-        ],
+        "tags": ["APIs"],
         "summary": "Create_Project",
         "requestBody": {
           "content": {
@@ -239,9 +223,7 @@
     },
     "/create-project-task": {
       "post": {
-        "tags": [
-          "APIs"
-        ],
+        "tags": ["APIs"],
         "summary": "Create Task",
         "requestBody": {
           "content": {
@@ -273,11 +255,97 @@
         }
       }
     },
+    "/get-project/{project_id}/tasks/{task_id}": {
+      "get": {
+        "tags": ["APIs"],
+        "summary": "Get task by ID.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "example": "1001"
+          },
+          {
+            "name": "task_id",
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "example": "1001"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["APIs"],
+        "summary": "Update task by ID",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "status": "Completed"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "example": "1011"
+          },
+          {
+            "name": "task_id",
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "example": "1003"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
     "/project-task-timestamp": {
       "post": {
-        "tags": [
-          "APIs"
-        ],
+        "tags": ["APIs"],
         "summary": "Task Timestamp",
         "requestBody": {
           "content": {
@@ -312,9 +380,7 @@
     },
     "/delete-project": {
       "delete": {
-        "tags": [
-          "APIs"
-        ],
+        "tags": ["APIs"],
         "summary": "Delete Project",
         "security": [
           {

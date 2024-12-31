@@ -258,6 +258,95 @@ router.get(
   }
 );
 
+router.get(
+  "/get-project/:project_id/tasks/:task_id",
+  //@ts-ignore
+  verifyToken,
+  async (req: MyRequest, res: Response) => {
+    const { project_id, task_id } = req.params;
+    if (project_id === ":project_id" || task_id === ":task_id") {
+      res.status(400).json({
+        message: "Please provide the complete details to update the task!",
+      });
+      return;
+    }
+    const project = await db("proj_tasks")
+      .select("*")
+      .where("project_id", project_id)
+      .where("task_id", task_id)
+      .first();
+    if (!project) {
+      res.status(404).json({ message: `Task with ID: ${task_id} not fonud! ` });
+      return;
+    }
+    project.start_time = moment(project.start_time)
+      .local()
+      .format("YYYY-MM-DD HH:mm:ss");
+    project.end_time = moment(project.end_time)
+      .local()
+      .format("YYYY-MM-DD HH:mm:ss");
+    project.created_at = moment(project.created_at)
+      .local()
+      .format("YYYY-MM-DD HH:mm:ss");
+    res.status(200).json(project);
+  }
+);
+
+router.put(
+  "/get-project/:project_id/tasks/:task_id",
+  //@ts-ignore
+  verifyToken,
+  async (req: MyRequest, res: Response) => {
+    const { project_id, task_id } = req.params;
+    const { description, start_time, end_time, status } = req.body;
+    if (!description && !start_time && !end_time && !status) {
+      res
+        .status(400)
+        .json({ message: "Please provide details to update the task" });
+      return;
+    }
+    if (project_id === ":project_id" || task_id === ":task_id") {
+      res.status(400).json({
+        message: "Please provide the complete details to update the task!",
+      });
+      return;
+    }
+
+    const project = await db("proj_tasks")
+      .select("*")
+      .where("project_id", project_id)
+      .where("task_id", task_id)
+      .first();
+    if (!project) {
+      res.status(404).json({ message: `Task with ID: ${task_id} not fonud! ` });
+      return;
+    }
+    project.start_time = moment(project.start_time)
+      .local()
+      .format("YYYY-MM-DD HH:mm:ss");
+    project.end_time = moment(project.end_time)
+      .local()
+      .format("YYYY-MM-DD HH:mm:ss");
+    project.created_at = moment(project.created_at)
+      .local()
+      .format("YYYY-MM-DD HH:mm:ss");
+
+    if (description) {
+      await db("proj_tasks").update({ description }).where("task_id", task_id);
+    }
+    if (start_time) {
+      await db("proj_tasks").update({ start_time }).where("task_id", task_id);
+    }
+    if (end_time) {
+      await db("proj_tasks").update({ end_time }).where("task_id", task_id);
+    }
+    if (status) {
+      await db("proj_tasks").update({ status }).where("task_id", task_id);
+    }
+    res.status(200).json({ message: "Task updated succesfully!" });
+  }
+);
+
 router.post(
   "/project-task-timestamp",
   //@ts-ignore
@@ -409,7 +498,7 @@ router.get("/get-summary", async (req: Request, res: Response) => {
     project.end_time = moment(project.end_time)
       .local()
       .format("YYYY-MM-DD HH:mm:ss");
-    
+
     if (!timestamps) {
       summaries.push({
         ...project,
