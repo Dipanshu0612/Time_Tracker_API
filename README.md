@@ -103,6 +103,10 @@ A RESTful API designed to help freelancers track time spent on various projects 
    - **Required Fields:**
      - `project_id`: The ID of the project.
 
+### 14. View the API Documentation through Swagger
+   - **URL:** `GET /api-docs`
+   - **Description:** Generates a Swagger UI Interface showcasing the documentaion of all the APIs of the project.
+
 ## Authentication
 
 - Authentication for certain routes requires a valid JWT token, which is issued when the user logs in and verified with each request to secure endpoints.
