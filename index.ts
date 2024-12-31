@@ -1,12 +1,16 @@
 import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import router from "./routes/api_routes.js";
+import swaggerJsdoc from "swagger-jsdoc";
+import swaggerUI from 'swagger-ui-express';
+import SwaggerFile from './openapi.json' assert { type: "json" };
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 app.use("/", router);
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(SwaggerFile))
 
 app.use(
   "/",

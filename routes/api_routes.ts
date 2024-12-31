@@ -118,6 +118,12 @@ router.get(
       .select("*")
       .where("project_id", project_id)
       .first();
+    result.created_at = moment(result.created_at)
+      .local()
+      .format("YYYY-MM-DD HH:mm:ss");
+    result.updated_at = moment(result.updated_at)
+      .local()
+      .format("YYYY-MM-DD HH:mm:ss");
     if (result) {
       res.status(200).send(result);
     } else {
