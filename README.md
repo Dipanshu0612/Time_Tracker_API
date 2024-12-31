@@ -6,7 +6,8 @@ A RESTful API designed to help freelancers track time spent on various projects 
 
 - User registration and authentication with JWT tokens.
 - Project management (Create, Get, Delete Projects).
-- Track time spent on projects with timestamps.
+- Create tasks for specific projects
+- Track time spent on tasks and projects with timestamps.
 - Generate detailed project summaries and export them as CSV files.
 
 ## API Endpoints
@@ -50,22 +51,37 @@ A RESTful API designed to help freelancers track time spent on various projects 
    - **Description:** Deletes the project with the specified ID from the database.
    - **Required Fields:**
      - `project_id`: The ID of the project to delete.
-
-### 7. Add Timestamp
-   - **URL:** `POST /project-timestamp`
-   - **Description:** Adds a timestamp (start and end time) to track the time spent on a specific project.
+    
+### 7. Create Task
+   - **URL:** `POST /create-project-task`
+   - **Description:** Creates a task for a specific project in the database.
+   - **Required Fields:**
+      - `project_id`: The ID of the project.
+      - `task_description`: The description of the task.
+      - `start_time`: The start time for the task.
+      - `end_time`: End time for the task.
+    
+### 8. View Task
+   - **URL:** `GET /get-project/:project_id/tasks`
+   - **Description:** Gets the details of the tasks on the specific project.
+   - **Required Fields:**
+      - `project_id`: The ID of the project.
+     
+### 9. Add Timestamp
+   - **URL:** `POST /project-task-timestamp`
+   - **Description:** Adds a timestamp (start and end time) to track the time spent on a task in specific project.
    - **Required Fields:**
      - `project_id`: The ID of the project.
-     - `user_id`: The ID of the user adding the timestamp.
+     - `task_id`: The ID of the task to which the timestamp is added.
      - `start_time`: The start time of the task.
      - `end_time`: The end time of the task.
      - `description`: A brief description of the task.
 
-### 8. Get Summary of All Projects
+### 10. Get Summary of All Projects
    - **URL:** `GET /get-summary`
    - **Description:** Generates a summary of all projects, including their details and the total time worked on each. The summary is returned as a downloadable CSV file.
 
-### 9. Get Summary of Specific Project
+### 11. Get Summary of Specific Project
    - **URL:** `GET /get-summary/:project_id`
    - **Description:** Generates a summary for a specific project, including the project details and the total time worked. The summary is returned as a downloadable CSV file.
    - **Required Fields:**
