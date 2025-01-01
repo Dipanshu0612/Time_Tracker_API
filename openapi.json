@@ -170,7 +170,7 @@
               "schema": {
                 "type": "object",
                 "example": {
-                  "user_id": "1004",
+                  "user_id": 1004,
                   "Password": "abcd9999"
                 }
               }
@@ -197,7 +197,7 @@
               "schema": {
                 "type": "object",
                 "example": {
-                  "user_id": "1004",
+                  "user_id": 1004,
                   "name": "Time Tracker API V2",
                   "description": "A RESTful API designed to help freelancers track time spent on various projects and generate work summaries. The API includes user management, project tracking, and time tracking functionalities.",
                   "status": "active"
@@ -382,6 +382,18 @@
       "delete": {
         "tags": ["APIs"],
         "summary": "Delete Project",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "project_id": 1011
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
             "bearerAuth": []
