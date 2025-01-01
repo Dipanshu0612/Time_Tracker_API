@@ -117,3 +117,6 @@ A RESTful API designed to help freelancers track time spent on various projects 
 2. Install dependencies:
    ```bash
    npm install
+3. Run the server
+   ```bash
+   npm run dev

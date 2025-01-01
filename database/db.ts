@@ -1,16 +1,20 @@
-import knex from "knex";
-import knexfile from "./knexfile.js";
-const db = knex(knexfile);
+import { Database } from "./kysely.js";
+import { createPool } from "mysql2";
+import { Kysely, MysqlDialect } from "kysely";
+import { configDotenv } from "dotenv";
+configDotenv();
 
-async function checkConnection() {
-    try {
-        await db.raw("SELECT 1+1 AS result");
-        console.log("Database connected successfully");
-        return true;
-    } catch (err) {
-        console.error("Error connecting to the database:", err);
-        return false;
-    }
-}
+const dialect = new MysqlDialect({
+  pool: createPool({
+    database: process.env.DB_NAME,
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    port: 3306,
+    connectionLimit: 10,
+  }),
+});
 
-export default { db, checkConnection };
+export const db = new Kysely<Database>({
+  dialect,
+});
