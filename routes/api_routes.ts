@@ -15,6 +15,56 @@ interface MyRequest extends Request {
   user?: any;
 }
 
+function validateDates(startDate:string, endDate:string) {
+  const start = moment(startDate, "YYYY-MM-DD HH:mm:ss", true);
+  const end = moment(endDate, "YYYY-MM-DD HH:mm:ss", true);
+
+  if (!start.isValid()) {
+    throw new Error(
+      "Start date is invalid. Please use the format YYYY-MM-DD HH:MM:SS."
+    );
+  }
+
+  if (!end.isValid()) {
+    throw new Error(
+      "End date is invalid. Please use the format YYYY-MM-DD HH:MM:SS."
+    );
+  }
+
+  if (start.isAfter(end)) {
+    throw new Error("Start date cannot be greater than end date.");
+  }
+
+  return true;
+
+}
+
+interface Project {
+  user_id: number;
+  name:string;
+  description:string;
+  status: string;
+  project_id: number;
+  start_time: string,
+  end_time:string
+}
+
+interface Task{
+  user_id: number,
+  project_id: number,
+  task_description: string,
+  task_id: number,
+  status: string,
+  start_time: string,
+  end_time: string;
+}
+interface User{
+  Name: string,
+  Email_ID: string,
+  Password: string,
+  user_id:number,
+}
+
 checkConnection();
 
 router.get("/", async (req: Request, res: Response) => {
@@ -28,7 +78,7 @@ router.get("/", async (req: Request, res: Response) => {
 });
 
 router.post("/add-user", async (req: Request, res: Response) => {
-  const { Name, Email_ID, Password } = req.body;
+  const { Name, Email_ID, Password }:User = req.body;
   const newPass = await bcrypt.hash(Password, 10);
   try {
     await db("user_data").insert({
@@ -52,7 +102,7 @@ router.post("/add-user", async (req: Request, res: Response) => {
 });
 
 router.post("/verify-user", async (req: Request, res: Response) => {
-  const { user_id, Password } = req.body;
+  const { user_id, Password }:User = req.body;
   if (!user_id || !Password) {
     res.status(400).json({ message: "ID or Password is Missing!" });
     return;
@@ -82,7 +132,7 @@ router.post(
   verifyToken,
   async (req: Request, res: Response) => {
     try {
-      const { user_id, name, description, status } = req.body;
+      const { user_id, name, description, status }:Project = req.body;
       if (!user_id || !name || !description || !status) {
         return res.status(400).json({
           message:
@@ -103,7 +153,8 @@ router.post(
     } catch (error: any) {
       res
         .status(500)
-        .json({ message: "Could not add project!", error: error.sqlMessage });
+        .json({ message: "Could not add project!" });
+      console.log(error);
     }
   }
 );
@@ -187,12 +238,18 @@ router.post(
   async (req: MyRequest, res: Response) => {
     try {
       const user_id = req.user.user_id;
-      const { project_id, task_description, start_time, end_time } = req.body;
+      const { project_id, task_description, start_time, end_time } : Task = req.body;
       if (!project_id || !task_description || !start_time || !end_time) {
         return res.status(400).json({
           message:
             "Incomelpete details! Please provide all the details to create task in the project.",
         });
+      }
+      try {
+        validateDates(start_time, end_time);
+      } catch (error:any) {
+        res.status(400).json({Error:error.message});
+        return;
       }
       const proj_user = await db("projects")
         .select("user_id")
@@ -220,6 +277,7 @@ router.post(
       res
         .status(200)
         .json({ message: "Task created successfully!", task_id: task[0] });
+      return;
     } catch (error: any) {
       res
         .status(500)
@@ -298,8 +356,8 @@ router.put(
   verifyToken,
   async (req: MyRequest, res: Response) => {
     const { project_id, task_id } = req.params;
-    const { description, start_time, end_time, status } = req.body;
-    if (!description && !start_time && !end_time && !status) {
+    const { task_description, start_time, end_time, status } : Task = req.body;
+    if (!task_description && !start_time && !end_time && !status) {
       res
         .status(400)
         .json({ message: "Please provide details to update the task" });
@@ -331,8 +389,8 @@ router.put(
       .local()
       .format("YYYY-MM-DD HH:mm:ss");
 
-    if (description) {
-      await db("proj_tasks").update({ description }).where("task_id", task_id);
+    if (task_description) {
+      await db("proj_tasks").update({ task_description }).where("task_id", task_id);
     }
     if (start_time) {
       await db("proj_tasks").update({ start_time }).where("task_id", task_id);
@@ -354,7 +412,7 @@ router.post(
   async (req: MyRequest, res: Response) => {
     try {
       const user_id = req.user.user_id;
-      const { task_id, project_id, start_time, end_time, description } =
+      const { task_id, project_id, start_time, end_time, task_description } : Task =
         req.body;
       if (
         !task_id ||
@@ -362,7 +420,7 @@ router.post(
         !project_id ||
         !start_time ||
         !end_time ||
-        !description
+        !task_description
       ) {
         return res.status(400).json({
           message:
@@ -410,7 +468,7 @@ router.post(
         user_id,
         start_time,
         end_time,
-        description,
+        descriptiom:task_description,
       });
       res.status(200).json({
         message: `Timestamp for Task with ID : ${task_id} inserted!`,
