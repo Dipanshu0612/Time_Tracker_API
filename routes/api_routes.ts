@@ -497,6 +497,13 @@ router.post(
         return;
       }
 
+      try {
+        validateDates(start_time, end_time);
+      } catch (error: any) {
+        res.status(400).json({ Error: error.message });
+        return;
+      }
+
       await db
         .insertInto("time_entries")
         .values({
