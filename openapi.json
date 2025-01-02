@@ -21,112 +21,74 @@
   "paths": {
     "/": {
       "get": {
-        "tags": ["APIs"],
+        "tags": [
+          "Default"
+        ],
         "summary": "Home",
         "responses": {
           "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {}
-            }
-          }
-        }
-      }
-    },
-    "/get-project/{project_id}": {
-      "get": {
-        "tags": ["APIs"],
-        "summary": "Get Project By ID",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "project_id",
-            "in": "path",
-            "schema": {
-              "type": "integer"
+            "description": "OK",
+            "headers": {
+              "X-Powered-By": {
+                "schema": {
+                  "type": "string",
+                  "example": "Express"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string",
+                  "example": "*"
+                }
+              },
+              "Content-Type": {
+                "schema": {
+                  "type": "string",
+                  "example": "application/json; charset=utf-8"
+                }
+              },
+              "Content-Length": {
+                "schema": {
+                  "type": "integer",
+                  "example": "546"
+                }
+              },
+              "ETag": {
+                "schema": {
+                  "type": "string",
+                  "example": "W/\"222-Ld8WHuh+x3EadwKeq0liSF9r604\""
+                }
+              },
+              "Date": {
+                "schema": {
+                  "type": "string",
+                  "example": "Thu, 02 Jan 2025 03:59:53 GMT"
+                }
+              },
+              "Connection": {
+                "schema": {
+                  "type": "string",
+                  "example": "keep-alive"
+                }
+              },
+              "Keep-Alive": {
+                "schema": {
+                  "type": "string",
+                  "example": "timeout=5"
+                }
+              }
             },
-            "required": true,
-            "example": "1001"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful response",
             "content": {
-              "application/json": {}
-            }
-          }
-        }
-      }
-    },
-    "/get-summary/{project_id}": {
-      "get": {
-        "tags": ["APIs"],
-        "summary": "Get Summary by Project_ID",
-        "parameters": [
-          {
-            "name": "project_id",
-            "in": "path",
-            "schema": {
-              "type": "integer"
-            },
-            "required": true,
-            "example": "1001"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {}
-            }
-          }
-        }
-      }
-    },
-    "/get-summary": {
-      "get": {
-        "tags": ["APIs"],
-        "summary": "Get Summary of All Projects",
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {}
-            }
-          }
-        }
-      }
-    },
-    "/get-project/{project_id}/tasks": {
-      "get": {
-        "tags": ["APIs"],
-        "summary": "Get Project Tasks",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "project_id",
-            "in": "path",
-            "schema": {
-              "type": "integer"
-            },
-            "required": true,
-            "example": "1001"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {}
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "messgae": "Welcome to the time tracker API!",
+                  "description": "A RESTful API to help freelancers track time spent on projects and generate work summaries. Create, update, and delete projects, tasks, and timestamps.",
+                  "routes": "'/', '/add-user', '/verify-user', '/create-project', '/get-project/:project_id', '/delete-project', '/create-project-task', '/get-project/:project_id/tasks', '/get-project/:project_id/tasks/:task_id', '/get-project/:project_id/tasks/:task_id/update', '/project-task-timestamp', '/get-summary/:project_id', '/get-summary'"
+                }
+              }
             }
           }
         }
@@ -134,17 +96,44 @@
     },
     "/add-user": {
       "post": {
-        "tags": ["APIs"],
+        "tags": [
+          "User"
+        ],
         "summary": "Add User",
+        "required": true,
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
+                "description": "User details to be added",
+              "required": [
+                "Name",
+                "Email_ID",
+                "Password"
+              ],
+              "properties": {
+                "Name": {
+                  "type": "string",
+                  "description": "The full name of the user.",
+                  "example": "MS Dhoni"
+                },
+                "Email_ID": {
+                  "type": "string",
+                  "format": "email",
+                  "description": "The email address of the user. Must be unique.",
+                  "example": "thala7@gmail.com"
+                },
+                "Password": {
+                  "type": "string",
+                  "description": "The password for the user account.",
+                  "example": "ThalaForAReason!"
+                }
+            },
                 "example": {
-                  "Name": "Digvyanshu Sharma",
-                  "Email_ID": "ds@gmail.com",
-                  "Password": "abcd9999"
+                  "Name": "MS Dhoni",
+                  "Email_ID": "thala7@gmail.com",
+                  "Password": "ThalaForAReason!"
                 }
               }
             }
@@ -152,9 +141,131 @@
         },
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "User added succesfully.",
+            "headers": {
+              "X-Powered-By": {
+                "schema": {
+                  "type": "string",
+                  "example": "Express"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string",
+                  "example": "*"
+                }
+              },
+              "Content-Type": {
+                "schema": {
+                  "type": "string",
+                  "example": "application/json; charset=utf-8"
+                }
+              },
+              "Content-Length": {
+                "schema": {
+                  "type": "integer",
+                  "example": "54"
+                }
+              },
+              "ETag": {
+                "schema": {
+                  "type": "string",
+                  "example": "W/\"36-y2NYM8DSEGW0z78RWsr8M4B6pak\""
+                }
+              },
+              "Date": {
+                "schema": {
+                  "type": "string",
+                  "example": "Thu, 02 Jan 2025 04:00:49 GMT"
+                }
+              },
+              "Connection": {
+                "schema": {
+                  "type": "string",
+                  "example": "keep-alive"
+                }
+              },
+              "Keep-Alive": {
+                "schema": {
+                  "type": "string",
+                  "example": "timeout=5"
+                }
+              }
+            },
             "content": {
-              "application/json": {}
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "message": "User Added Successfully!!",
+                  "user_id": 1010
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Could not add user.",
+            "headers": {
+              "X-Powered-By": {
+                "schema": {
+                  "type": "string",
+                  "example": "Express"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string",
+                  "example": "*"
+                }
+              },
+              "Content-Type": {
+                "schema": {
+                  "type": "string",
+                  "example": "application/json; charset=utf-8"
+                }
+              },
+              "Content-Length": {
+                "schema": {
+                  "type": "integer",
+                  "example": "54"
+                }
+              },
+              "ETag": {
+                "schema": {
+                  "type": "string",
+                  "example": "W/\"36-y2NYM8DSEGW0z78RWsr8M4B6pak\""
+                }
+              },
+              "Date": {
+                "schema": {
+                  "type": "string",
+                  "example": "Thu, 02 Jan 2025 04:00:49 GMT"
+                }
+              },
+              "Connection": {
+                "schema": {
+                  "type": "string",
+                  "example": "keep-alive"
+                }
+              },
+              "Keep-Alive": {
+                "schema": {
+                  "type": "string",
+                  "example": "timeout=5"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "message":"Could not add user!",
+                  "error":"Duplicate User!"
+                }
+              }
             }
           }
         }
@@ -162,16 +273,32 @@
     },
     "/verify-user": {
       "post": {
-        "tags": ["APIs"],
+        "tags": [
+          "User"
+        ],
         "summary": "Verify User",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
+                "description": "User details to get verified.",
+                "required": ["user_id", "Password"],
+                "properties": {
+                  "user_id": {
+                    "type": "number",
+                    "description": "The user id of the user.",
+                    "example": 1010
+                  },
+                  "Password": {
+                    "type": "string",
+                    "description": "The password for the user account.",
+                    "example": "ThalaForAReason!"
+                  }
+                },
                 "example": {
-                  "user_id": 1004,
-                  "Password": "abcd9999"
+                  "user_id": 1010,
+                  "Password": "ThalaForAReason!"
                 }
               }
             }
@@ -179,9 +306,193 @@
         },
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Succesfull Login",
+            "headers": {
+              "X-Powered-By": {
+                "schema": {
+                  "type": "string",
+                  "example": "Express"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string",
+                  "example": "*"
+                }
+              },
+              "Content-Type": {
+                "schema": {
+                  "type": "string",
+                  "example": "application/json; charset=utf-8"
+                }
+              },
+              "Content-Length": {
+                "schema": {
+                  "type": "integer",
+                  "example": "200"
+                }
+              },
+              "ETag": {
+                "schema": {
+                  "type": "string",
+                  "example": "W/\"c8-G9HrPxecIQKsW+UlFce7RjgMuAs\""
+                }
+              },
+              "Date": {
+                "schema": {
+                  "type": "string",
+                  "example": "Thu, 02 Jan 2025 04:01:22 GMT"
+                }
+              },
+              "Connection": {
+                "schema": {
+                  "type": "string",
+                  "example": "keep-alive"
+                }
+              },
+              "Keep-Alive": {
+                "schema": {
+                  "type": "string",
+                  "example": "timeout=5"
+                }
+              }
+            },
             "content": {
-              "application/json": {}
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "message": "Successfully Verified User!",
+                  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDEwLCJpYXQiOjE3MzU3OTA0ODIsImV4cCI6MTczNTc5NDA4Mn0.7cS1HmtU8_PuixtNF4tg1Q-W0nN-sKQIt5el0o_ZFUs"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid Credentials",
+            "headers": {
+              "X-Powered-By": {
+                "schema": {
+                  "type": "string",
+                  "example": "Express"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string",
+                  "example": "*"
+                }
+              },
+              "Content-Type": {
+                "schema": {
+                  "type": "string",
+                  "example": "application/json; charset=utf-8"
+                }
+              },
+              "Content-Length": {
+                "schema": {
+                  "type": "integer",
+                  "example": "34"
+                }
+              },
+              "ETag": {
+                "schema": {
+                  "type": "string",
+                  "example": "W/\"22-fzeLjt+7BDvY63yWDbGinFnynt4\""
+                }
+              },
+              "Date": {
+                "schema": {
+                  "type": "string",
+                  "example": "Thu, 02 Jan 2025 04:11:31 GMT"
+                }
+              },
+              "Connection": {
+                "schema": {
+                  "type": "string",
+                  "example": "keep-alive"
+                }
+              },
+              "Keep-Alive": {
+                "schema": {
+                  "type": "string",
+                  "example": "timeout=5"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "message": "Invalid Credentials!"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "headers": {
+              "X-Powered-By": {
+                "schema": {
+                  "type": "string",
+                  "example": "Express"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string",
+                  "example": "*"
+                }
+              },
+              "Content-Type": {
+                "schema": {
+                  "type": "string",
+                  "example": "application/json; charset=utf-8"
+                }
+              },
+              "Content-Length": {
+                "schema": {
+                  "type": "integer",
+                  "example": "43"
+                }
+              },
+              "ETag": {
+                "schema": {
+                  "type": "string",
+                  "example": "W/\"2b-3CHRB1EiLD7nhYqLlugqVtbayck\""
+                }
+              },
+              "Date": {
+                "schema": {
+                  "type": "string",
+                  "example": "Thu, 02 Jan 2025 04:13:10 GMT"
+                }
+              },
+              "Connection": {
+                "schema": {
+                  "type": "string",
+                  "example": "keep-alive"
+                }
+              },
+              "Keep-Alive": {
+                "schema": {
+                  "type": "string",
+                  "example": "timeout=5"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "message": "No user found with ID 101011!"
+                }
+              }
             }
           }
         }
@@ -189,17 +500,44 @@
     },
     "/create-project": {
       "post": {
-        "tags": ["APIs"],
+        "tags": [
+          "Project"
+        ],
         "summary": "Create_Project",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
+                "description": "Project details to be added",
+                "required": ["user_id", "name", "description"],
+                "properties": {
+                  "user_id": {
+                    "type": "number",
+                    "description": "The user id of the user.",
+                    "example": 1010
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the project.",
+                    "example": "PostMan API Test"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "The description of the project.",
+                    "example": "To test the Time Tracker API in Postman and generate the swagger file."
+                  },
+                  "status": {
+                    "type": "string",
+                    "description": "The status of the project.",
+                    "example": "active"
+                  }
+                  
+                },
                 "example": {
-                  "user_id": 1004,
-                  "name": "Time Tracker API V2",
-                  "description": "A RESTful API designed to help freelancers track time spent on various projects and generate work summaries. The API includes user management, project tracking, and time tracking functionalities.",
+                  "user_id": 1010,
+                  "name": "PostMan API Test",
+                  "description": "To test the Time Tracker API in Postman and generate the swagger file.",
                   "status": "active"
                 }
               }
@@ -213,9 +551,194 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "OK",
+            "headers": {
+              "X-Powered-By": {
+                "schema": {
+                  "type": "string",
+                  "example": "Express"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string",
+                  "example": "*"
+                }
+              },
+              "Content-Type": {
+                "schema": {
+                  "type": "string",
+                  "example": "application/json; charset=utf-8"
+                }
+              },
+              "Content-Length": {
+                "schema": {
+                  "type": "integer",
+                  "example": "59"
+                }
+              },
+              "ETag": {
+                "schema": {
+                  "type": "string",
+                  "example": "W/\"3b-I1jUcvWDruTXP2mu7WCORjr/NbE\""
+                }
+              },
+              "Date": {
+                "schema": {
+                  "type": "string",
+                  "example": "Thu, 02 Jan 2025 04:02:40 GMT"
+                }
+              },
+              "Connection": {
+                "schema": {
+                  "type": "string",
+                  "example": "keep-alive"
+                }
+              },
+              "Keep-Alive": {
+                "schema": {
+                  "type": "string",
+                  "example": "timeout=5"
+                }
+              }
+            },
             "content": {
-              "application/json": {}
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "message": "Project added successfully!",
+                  "project_id": 1016
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {
+              "X-Powered-By": {
+                "schema": {
+                  "type": "string",
+                  "example": "Express"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string",
+                  "example": "*"
+                }
+              },
+              "Content-Type": {
+                "schema": {
+                  "type": "string",
+                  "example": "application/json; charset=utf-8"
+                }
+              },
+              "Content-Length": {
+                "schema": {
+                  "type": "integer",
+                  "example": "81"
+                }
+              },
+              "ETag": {
+                "schema": {
+                  "type": "string",
+                  "example": "W/\"51-n/s0Y5Iqs1F5Q+ykNR8RPRyYpJM\""
+                }
+              },
+              "Date": {
+                "schema": {
+                  "type": "string",
+                  "example": "Thu, 02 Jan 2025 04:14:01 GMT"
+                }
+              },
+              "Connection": {
+                "schema": {
+                  "type": "string",
+                  "example": "keep-alive"
+                }
+              },
+              "Keep-Alive": {
+                "schema": {
+                  "type": "string",
+                  "example": "timeout=5"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "message": "Incomelpete details! Please provide all the details to add project."
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "headers": {
+              "X-Powered-By": {
+                "schema": {
+                  "type": "string",
+                  "example": "Express"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string",
+                  "example": "*"
+                }
+              },
+              "Content-Type": {
+                "schema": {
+                  "type": "string",
+                  "example": "application/json; charset=utf-8"
+                }
+              },
+              "Content-Length": {
+                "schema": {
+                  "type": "integer",
+                  "example": "81"
+                }
+              },
+              "ETag": {
+                "schema": {
+                  "type": "string",
+                  "example": "W/\"51-n/s0Y5Iqs1F5Q+ykNR8RPRyYpJM\""
+                }
+              },
+              "Date": {
+                "schema": {
+                  "type": "string",
+                  "example": "Thu, 02 Jan 2025 04:14:01 GMT"
+                }
+              },
+              "Connection": {
+                "schema": {
+                  "type": "string",
+                  "example": "keep-alive"
+                }
+              },
+              "Keep-Alive": {
+                "schema": {
+                  "type": "string",
+                  "example": "timeout=5"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "message": "Could not add project!",
+                  "error": "Internal Server Error!"
+                }
+              }
             }
           }
         }
@@ -223,18 +746,44 @@
     },
     "/create-project-task": {
       "post": {
-        "tags": ["APIs"],
+        "tags": [
+          "Tasks"
+        ],
         "summary": "Create Task",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
+                "description": "Task details to be added",
+                "required": ["project_id", "task_description", "start_time", "end_time"],
+                "properties": {
+                  "project_id": {
+                    "type": "number",
+                    "description": "The project id of the project.",
+                    "example": 1016
+                  },
+                  "task_description": {
+                    "type": "string",
+                    "description": "The description of the task.",
+                    "example": "Running API Collection in Postman"
+                  },
+                  "start_time": {
+                    "type": "string",
+                    "description": "The start time of the task.",
+                    "example": "2025-01-02 09:15:23"
+                  },
+                  "end_time": {
+                    "type": "string",
+                    "description": "The end time of the task.",
+                    "example": "2025-01-02 10:00:00"
+                  }
+                },
                 "example": {
-                  "project_id": 1011,
-                  "task_description": "Do the API documentation.",
-                  "start_time": "2024-12-31 15:50:00",
-                  "end_time": "2024-12-31 17:15:00"
+                  "project_id": 1016,
+                  "task_description": "Running API Collection in Postman",
+                  "start_time": "2025-01-02 09:15:23",
+                  "end_time": "2025-01-02 10:00:00"
                 }
               }
             }
@@ -247,9 +796,771 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "OK",
+            "headers": {
+              "X-Powered-By": {
+                "schema": {
+                  "type": "string",
+                  "example": "Express"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string",
+                  "example": "*"
+                }
+              },
+              "Content-Type": {
+                "schema": {
+                  "type": "string",
+                  "example": "application/json; charset=utf-8"
+                }
+              },
+              "Content-Length": {
+                "schema": {
+                  "type": "integer",
+                  "example": "55"
+                }
+              },
+              "ETag": {
+                "schema": {
+                  "type": "string",
+                  "example": "W/\"37-mgjCEMQFcq7KC4HsopK3H2EuMBo\""
+                }
+              },
+              "Date": {
+                "schema": {
+                  "type": "string",
+                  "example": "Thu, 02 Jan 2025 04:03:21 GMT"
+                }
+              },
+              "Connection": {
+                "schema": {
+                  "type": "string",
+                  "example": "keep-alive"
+                }
+              },
+              "Keep-Alive": {
+                "schema": {
+                  "type": "string",
+                  "example": "timeout=5"
+                }
+              }
+            },
             "content": {
-              "application/json": {}
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "message": "Task created successfully!",
+                  "task_id": 1008
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {
+              "X-Powered-By": {
+                "schema": {
+                  "type": "string",
+                  "example": "Express"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string",
+                  "example": "*"
+                }
+              },
+              "Content-Type": {
+                "schema": {
+                  "type": "string",
+                  "example": "application/json; charset=utf-8"
+                }
+              },
+              "Content-Length": {
+                "schema": {
+                  "type": "integer",
+                  "example": "55"
+                }
+              },
+              "ETag": {
+                "schema": {
+                  "type": "string",
+                  "example": "W/\"37-mgjCEMQFcq7KC4HsopK3H2EuMBo\""
+                }
+              },
+              "Date": {
+                "schema": {
+                  "type": "string",
+                  "example": "Thu, 02 Jan 2025 04:03:21 GMT"
+                }
+              },
+              "Connection": {
+                "schema": {
+                  "type": "string",
+                  "example": "keep-alive"
+                }
+              },
+              "Keep-Alive": {
+                "schema": {
+                  "type": "string",
+                  "example": "timeout=5"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "message": "Incomelpete details! Please provide all the details to create task in the project."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "headers": {
+              "X-Powered-By": {
+                "schema": {
+                  "type": "string",
+                  "example": "Express"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string",
+                  "example": "*"
+                }
+              },
+              "Content-Type": {
+                "schema": {
+                  "type": "string",
+                  "example": "application/json; charset=utf-8"
+                }
+              },
+              "Content-Length": {
+                "schema": {
+                  "type": "integer",
+                  "example": "55"
+                }
+              },
+              "ETag": {
+                "schema": {
+                  "type": "string",
+                  "example": "W/\"37-mgjCEMQFcq7KC4HsopK3H2EuMBo\""
+                }
+              },
+              "Date": {
+                "schema": {
+                  "type": "string",
+                  "example": "Thu, 02 Jan 2025 04:03:21 GMT"
+                }
+              },
+              "Connection": {
+                "schema": {
+                  "type": "string",
+                  "example": "keep-alive"
+                }
+              },
+              "Keep-Alive": {
+                "schema": {
+                  "type": "string",
+                  "example": "timeout=5"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "message": "No project found with ID 1016!"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {
+              "X-Powered-By": {
+                "schema": {
+                  "type": "string",
+                  "example": "Express"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string",
+                  "example": "*"
+                }
+              },
+              "Content-Type": {
+                "schema": {
+                  "type": "string",
+                  "example": "application/json; charset=utf-8"
+                }
+              },
+              "Content-Length": {
+                "schema": {
+                  "type": "integer",
+                  "example": "55"
+                }
+              },
+              "ETag": {
+                "schema": {
+                  "type": "string",
+                  "example": "W/\"37-mgjCEMQFcq7KC4HsopK3H2EuMBo\""
+                }
+              },
+              "Date": {
+                "schema": {
+                  "type": "string",
+                  "example": "Thu, 02 Jan 2025 04:03:21 GMT"
+                }
+              },
+              "Connection": {
+                "schema": {
+                  "type": "string",
+                  "example": "keep-alive"
+                }
+              },
+              "Keep-Alive": {
+                "schema": {
+                  "type": "string",
+                  "example": "timeout=5"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "message": "User with ID: 1001 does not have access to project with ID: 1011."
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "headers": {
+              "X-Powered-By": {
+                "schema": {
+                  "type": "string",
+                  "example": "Express"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string",
+                  "example": "*"
+                }
+              },
+              "Content-Type": {
+                "schema": {
+                  "type": "string",
+                  "example": "application/json; charset=utf-8"
+                }
+              },
+              "Content-Length": {
+                "schema": {
+                  "type": "integer",
+                  "example": "55"
+                }
+              },
+              "ETag": {
+                "schema": {
+                  "type": "string",
+                  "example": "W/\"37-mgjCEMQFcq7KC4HsopK3H2EuMBo\""
+                }
+              },
+              "Date": {
+                "schema": {
+                  "type": "string",
+                  "example": "Thu, 02 Jan 2025 04:03:21 GMT"
+                }
+              },
+              "Connection": {
+                "schema": {
+                  "type": "string",
+                  "example": "keep-alive"
+                }
+              },
+              "Keep-Alive": {
+                "schema": {
+                  "type": "string",
+                  "example": "timeout=5"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "message": "Could not add task!",
+                  "error": "Internal Server Error!"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/project-task-timestamp": {
+      "post": {
+        "tags": [
+          "Tasks"
+        ],
+        "summary": "Task Timestamp to be added to the task.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Task timestamp details to be added",
+                "required": ["task_id", "start_time", "end_time", "description"],
+                "properties": {
+                  "task_id": {
+                    "type": "number",
+                    "description": "The task id of the task.",
+                    "example": 1008
+                  },
+                  "start_time": {
+                    "type": "string",
+                    "description": "The start time of the task.",
+                    "example": "2025-01-02 09:20:36"
+                  },
+                  "end_time": {
+                    "type": "string",
+                    "description": "The end time of the task.",
+                    "example": "2025-01-02 09:45:16"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "The description of the task.",
+                    "example": "Completed running the API Collection in Postman."
+                  }
+                },
+                "example": {
+                  "task_id": 1008,
+                  "project_id": 1016,
+                  "start_time": "2025-01-02 09:20:36",
+                  "end_time": "2025-01-02 09:45:16",
+                  "description": "Completed running the API Collection in Postman."
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Powered-By": {
+                "schema": {
+                  "type": "string",
+                  "example": "Express"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string",
+                  "example": "*"
+                }
+              },
+              "Content-Type": {
+                "schema": {
+                  "type": "string",
+                  "example": "application/json; charset=utf-8"
+                }
+              },
+              "Content-Length": {
+                "schema": {
+                  "type": "integer",
+                  "example": "57"
+                }
+              },
+              "ETag": {
+                "schema": {
+                  "type": "string",
+                  "example": "W/\"39-4UO8ygMiWqVFqctF8Hjzf/PjWIY\""
+                }
+              },
+              "Date": {
+                "schema": {
+                  "type": "string",
+                  "example": "Thu, 02 Jan 2025 04:03:58 GMT"
+                }
+              },
+              "Connection": {
+                "schema": {
+                  "type": "string",
+                  "example": "keep-alive"
+                }
+              },
+              "Keep-Alive": {
+                "schema": {
+                  "type": "string",
+                  "example": "timeout=5"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "message": "Timestamp for Task with ID : 1008 inserted!"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {
+              "X-Powered-By": {
+                "schema": {
+                  "type": "string",
+                  "example": "Express"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string",
+                  "example": "*"
+                }
+              },
+              "Content-Type": {
+                "schema": {
+                  "type": "string",
+                  "example": "application/json; charset=utf-8"
+                }
+              },
+              "Content-Length": {
+                "schema": {
+                  "type": "integer",
+                  "example": "55"
+                }
+              },
+              "ETag": {
+                "schema": {
+                  "type": "string",
+                  "example": "W/\"37-mgjCEMQFcq7KC4HsopK3H2EuMBo\""
+                }
+              },
+              "Date": {
+                "schema": {
+                  "type": "string",
+                  "example": "Thu, 02 Jan 2025 04:03:21 GMT"
+                }
+              },
+              "Connection": {
+                "schema": {
+                  "type": "string",
+                  "example": "keep-alive"
+                }
+              },
+              "Keep-Alive": {
+                "schema": {
+                  "type": "string",
+                  "example": "timeout=5"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "message": "Incomelpete details! Please provide all the details to add timestamp in the project."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "headers": {
+              "X-Powered-By": {
+                "schema": {
+                  "type": "string",
+                  "example": "Express"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string",
+                  "example": "*"
+                }
+              },
+              "Content-Type": {
+                "schema": {
+                  "type": "string",
+                  "example": "application/json; charset=utf-8"
+                }
+              },
+              "Content-Length": {
+                "schema": {
+                  "type": "integer",
+                  "example": "55"
+                }
+              },
+              "ETag": {
+                "schema": {
+                  "type": "string",
+                  "example": "W/\"37-mgjCEMQFcq7KC4HsopK3H2EuMBo\""
+                }
+              },
+              "Date": {
+                "schema": {
+                  "type": "string",
+                  "example": "Thu, 02 Jan 2025 04:03:21 GMT"
+                }
+              },
+              "Connection": {
+                "schema": {
+                  "type": "string",
+                  "example": "keep-alive"
+                }
+              },
+              "Keep-Alive": {
+                "schema": {
+                  "type": "string",
+                  "example": "timeout=5"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "message": "Task with ID: 1002 does not exist on project with ID: 1001."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get-project/{project_id}/tasks": {
+      "get": {
+        "tags": [
+          "Project"
+        ],
+        "summary": "Get Project Tasks",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "User details to be added",
+            "required": ["project_id"],
+            "properties": {
+              "project_id": {
+                "type": "number",
+                "description": "The project id of the project.",
+                "example": 1016
+              },
+              "example": 1016
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Powered-By": {
+                "schema": {
+                  "type": "string",
+                  "example": "Express"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string",
+                  "example": "*"
+                }
+              },
+              "Content-Type": {
+                "schema": {
+                  "type": "string",
+                  "example": "application/json; charset=utf-8"
+                }
+              },
+              "Content-Length": {
+                "schema": {
+                  "type": "integer",
+                  "example": "226"
+                }
+              },
+              "ETag": {
+                "schema": {
+                  "type": "string",
+                  "example": "W/\"e2-QYDLWJknYl+sR59bkSP8KebH2ZQ\""
+                }
+              },
+              "Date": {
+                "schema": {
+                  "type": "string",
+                  "example": "Thu, 02 Jan 2025 04:04:20 GMT"
+                }
+              },
+              "Connection": {
+                "schema": {
+                  "type": "string",
+                  "example": "keep-alive"
+                }
+              },
+              "Keep-Alive": {
+                "schema": {
+                  "type": "string",
+                  "example": "timeout=5"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "task_id": 1008,
+                  "project_id": 1016,
+                  "user_id": 1010,
+                  "task_description": "Running API Collection in Postman",
+                  "status": "Ongoing",
+                  "start_time": "2025-01-02 09:15:23",
+                  "end_time": "2025-01-02 10:00:00",
+                  "created_at": "2025-01-02 09:33:21"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get-project/{project_id}": {
+      "get": {
+        "tags": [
+          "Project"
+        ],
+        "summary": "Get Project By ID",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Get the details of the project by ID",
+            "required": ["project_id"],
+            "properties": {
+              "project_id": {
+                "type": "number",
+                "description": "The project id of the project.",
+                "example": 1016
+              },
+              "example": 1016
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Powered-By": {
+                "schema": {
+                  "type": "string",
+                  "example": "Express"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string",
+                  "example": "*"
+                }
+              },
+              "Content-Type": {
+                "schema": {
+                  "type": "string",
+                  "example": "application/json; charset=utf-8"
+                }
+              },
+              "Content-Length": {
+                "schema": {
+                  "type": "integer",
+                  "example": "235"
+                }
+              },
+              "ETag": {
+                "schema": {
+                  "type": "string",
+                  "example": "W/\"eb-CURCgbXXyNm45UxocICLDsg/3ig\""
+                }
+              },
+              "Date": {
+                "schema": {
+                  "type": "string",
+                  "example": "Thu, 02 Jan 2025 04:04:47 GMT"
+                }
+              },
+              "Connection": {
+                "schema": {
+                  "type": "string",
+                  "example": "keep-alive"
+                }
+              },
+              "Keep-Alive": {
+                "schema": {
+                  "type": "string",
+                  "example": "timeout=5"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "project_id": 1016,
+                  "user_id": 1010,
+                  "name": "PostMan API Test",
+                  "description": "To test the Time Tracker API in Postman and generate the swagger file.",
+                  "status": "active",
+                  "created_at": "2025-01-02 09:32:40",
+                  "updated_at": "2025-01-02 09:32:40"
+                }
+              }
             }
           }
         }
@@ -257,7 +1568,9 @@
     },
     "/get-project/{project_id}/tasks/{task_id}": {
       "get": {
-        "tags": ["APIs"],
+        "tags": [
+          "Tasks"
+        ],
         "summary": "Get task by ID.",
         "security": [
           {
@@ -271,8 +1584,16 @@
             "schema": {
               "type": "integer"
             },
-            "required": true,
-            "example": "1001"
+            "description": "Get the details of the task by ID",
+            "required": ["project_id"],
+            "properties": {
+             "project_id": {
+                "type": "number",
+                "description": "The project id of the project.",
+                "example": 1016
+              },
+              "example": 1016
+            }
           },
           {
             "name": "task_id",
@@ -280,21 +1601,95 @@
             "schema": {
               "type": "integer"
             },
-            "required": true,
-            "example": "1001"
+            "description": "Get the details of the task by ID",
+            "required": ["task_id"],
+            "properties": {
+              "task_id": {
+                "type": "number",
+                "description": "The task id of the task.",
+                "example": 1008
+              },
+              "example": 1008
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "OK",
+            "headers": {
+              "X-Powered-By": {
+                "schema": {
+                  "type": "string",
+                  "example": "Express"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string",
+                  "example": "*"
+                }
+              },
+              "Content-Type": {
+                "schema": {
+                  "type": "string",
+                  "example": "application/json; charset=utf-8"
+                }
+              },
+              "Content-Length": {
+                "schema": {
+                  "type": "integer",
+                  "example": "226"
+                }
+              },
+              "ETag": {
+                "schema": {
+                  "type": "string",
+                  "example": "W/\"e2-QYDLWJknYl+sR59bkSP8KebH2ZQ\""
+                }
+              },
+              "Date": {
+                "schema": {
+                  "type": "string",
+                  "example": "Thu, 02 Jan 2025 04:05:10 GMT"
+                }
+              },
+              "Connection": {
+                "schema": {
+                  "type": "string",
+                  "example": "keep-alive"
+                }
+              },
+              "Keep-Alive": {
+                "schema": {
+                  "type": "string",
+                  "example": "timeout=5"
+                }
+              }
+            },
             "content": {
-              "application/json": {}
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "task_id": 1008,
+                  "project_id": 1016,
+                  "user_id": 1010,
+                  "task_description": "Running API Collection in Postman",
+                  "status": "Ongoing",
+                  "start_time": "2025-01-02 09:15:23",
+                  "end_time": "2025-01-02 10:00:00",
+                  "created_at": "2025-01-02 09:33:21"
+                }
+              }
             }
           }
         }
       },
       "put": {
-        "tags": ["APIs"],
+        "tags": [
+          "Tasks"
+        ],
         "summary": "Update task by ID",
         "requestBody": {
           "content": {
@@ -321,7 +1716,7 @@
               "type": "integer"
             },
             "required": true,
-            "example": "1011"
+            "example": "1016"
           },
           {
             "name": "task_id",
@@ -330,49 +1725,71 @@
               "type": "integer"
             },
             "required": true,
-            "example": "1003"
+            "example": "1008"
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {}
-            }
-          }
-        }
-      }
-    },
-    "/project-task-timestamp": {
-      "post": {
-        "tags": ["APIs"],
-        "summary": "Task Timestamp",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "example": {
-                  "task_id": 1003,
-                  "project_id": 1011,
-                  "start_time": "2024-12-31 15:51:00",
-                  "end_time": "2024-12-25 17:15:00",
-                  "description": "Complete the API documentation using Swagger."
+            "description": "OK",
+            "headers": {
+              "X-Powered-By": {
+                "schema": {
+                  "type": "string",
+                  "example": "Express"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string",
+                  "example": "*"
+                }
+              },
+              "Content-Type": {
+                "schema": {
+                  "type": "string",
+                  "example": "application/json; charset=utf-8"
+                }
+              },
+              "Content-Length": {
+                "schema": {
+                  "type": "integer",
+                  "example": "39"
+                }
+              },
+              "ETag": {
+                "schema": {
+                  "type": "string",
+                  "example": "W/\"27-AYWHTE0qLlSB5Bruef+vaPpskO8\""
+                }
+              },
+              "Date": {
+                "schema": {
+                  "type": "string",
+                  "example": "Thu, 02 Jan 2025 04:05:34 GMT"
+                }
+              },
+              "Connection": {
+                "schema": {
+                  "type": "string",
+                  "example": "keep-alive"
+                }
+              },
+              "Keep-Alive": {
+                "schema": {
+                  "type": "string",
+                  "example": "timeout=5"
                 }
               }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful response",
+            },
             "content": {
-              "application/json": {}
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "message": "Task updated succesfully!"
+                }
+              }
             }
           }
         }
@@ -380,15 +1797,21 @@
     },
     "/delete-project": {
       "delete": {
-        "tags": ["APIs"],
+        "tags": ["Project"],
         "summary": "Delete Project",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "example": {
-                  "project_id": 1011
+                "description": "Project ID to be deleted.",
+                "required": ["project_id"],
+                "properties": {
+                  "project_id": {
+                    "type": "number",
+                    "description": "The project id of the project.",
+                    "example": 1016
+                  }
                 }
               }
             }
@@ -401,9 +1824,296 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Task deleted successfully!",
+            "headers": {
+              "X-Powered-By": {
+                "schema": {
+                  "type": "string",
+                  "example": "Express"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string",
+                  "example": "*"
+                }
+              },
+              "Content-Type": {
+                "schema": {
+                  "type": "string",
+                  "example": "application/json; charset=utf-8"
+                }
+              },
+              "Content-Length": {
+                "schema": {
+                  "type": "integer",
+                  "example": "43"
+                }
+              },
+              "ETag": {
+                "schema": {
+                  "type": "string",
+                  "example": "W/\"2b-S0cCWDuahU2qLN/7IOXCHNzlVbs\""
+                }
+              },
+              "Date": {
+                "schema": {
+                  "type": "string",
+                  "example": "Thu, 02 Jan 2025 04:10:48 GMT"
+                }
+              },
+              "Connection": {
+                "schema": {
+                  "type": "string",
+                  "example": "keep-alive"
+                }
+              },
+              "Keep-Alive": {
+                "schema": {
+                  "type": "string",
+                  "example": "timeout=5"
+                }
+              }
+            },
             "content": {
-              "application/json": {}
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+
+                "example": {
+                  "message": "Project deleted successfully!"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "headers": {
+              "X-Powered-By": {
+                "schema": {
+                  "type": "string",
+                  "example": "Express"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string",
+                  "example": "*"
+                }
+              },
+              "Content-Type": {
+                "schema": {
+                  "type": "string",
+                  "example": "application/json; charset=utf-8"
+                }
+              },
+              "Content-Length": {
+                "schema": {
+                  "type": "integer",
+                  "example": "243"
+                }
+              },
+              "ETag": {
+                "schema": {
+                  "type": "string",
+                  "example": "W/\"f3-m1NTuI3jKQTTyRjrrQ0JpdFd5KM\""
+                }
+              },
+              "Date": {
+                "schema": {
+                  "type": "string",
+                  "example": "Thu, 02 Jan 2025 04:05:52 GMT"
+                }
+              },
+              "Connection": {
+                "schema": {
+                  "type": "string",
+                  "example": "keep-alive"
+                }
+              },
+              "Keep-Alive": {
+                "schema": {
+                  "type": "string",
+                  "example": "timeout=5"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "message": "Error deleting project!",
+                  "Error": "Cannot delete or update a parent row: a foreign key constraint fails (`time_tracking`.`proj_tasks`, CONSTRAINT `proj_tasks_ibfk_1` FOREIGN KEY (`project_id`) REFERENCES `projects` (`project_id`))"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get-summary/{project_id}": {
+      "get": {
+        "tags": [
+          "Project"
+        ],
+        "summary": "Get Summary by Project_ID",
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "example": "1001"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Powered-By": {
+                "schema": {
+                  "type": "string",
+                  "example": "Express"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string",
+                  "example": "*"
+                }
+              },
+              "Content-Type": {
+                "schema": {
+                  "type": "string",
+                  "example": "text/csv; charset=utf-8"
+                }
+              },
+              "Content-Disposition": {
+                "schema": {
+                  "type": "string",
+                  "example": "attachment; filename=\"Project_1001_Summary.csv\""
+                }
+              },
+              "Content-Length": {
+                "schema": {
+                  "type": "integer",
+                  "example": "237"
+                }
+              },
+              "ETag": {
+                "schema": {
+                  "type": "string",
+                  "example": "W/\"ed-ULVNa6DFmquk59LAWcwjFq/ms+o\""
+                }
+              },
+              "Date": {
+                "schema": {
+                  "type": "string",
+                  "example": "Thu, 02 Jan 2025 04:11:04 GMT"
+                }
+              },
+              "Connection": {
+                "schema": {
+                  "type": "string",
+                  "example": "keep-alive"
+                }
+              },
+              "Keep-Alive": {
+                "schema": {
+                  "type": "string",
+                  "example": "timeout=5"
+                }
+              }
+            },
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"project_id\",\"user_id\",\"name\",\"description\",\"status\",\"created_at\",\"updated_at\",\"Total time spent\"\n1001,1001,\"Time_Tracker_API\",\"A RESTful API for time tracking.\",\"active\",\"2024-12-24 16:52:56\",\"2024-12-24 16:52:56\",\"132 hours 22 minutes\""
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get-summary": {
+      "get": {
+        "tags": [
+          "Project"
+        ],
+        "summary": "Get Summary of All Projects",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Powered-By": {
+                "schema": {
+                  "type": "string",
+                  "example": "Express"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string",
+                  "example": "*"
+                }
+              },
+              "Content-Type": {
+                "schema": {
+                  "type": "string",
+                  "example": "text/csv; charset=utf-8"
+                }
+              },
+              "Content-Disposition": {
+                "schema": {
+                  "type": "string",
+                  "example": "attachment; filename=\"All_Project_Summaries.csv\""
+                }
+              },
+              "Content-Length": {
+                "schema": {
+                  "type": "integer",
+                  "example": "2217"
+                }
+              },
+              "ETag": {
+                "schema": {
+                  "type": "string",
+                  "example": "W/\"8a9-fd8Qn3DzH8fWQJrsuUkcr9F7yHI\""
+                }
+              },
+              "Date": {
+                "schema": {
+                  "type": "string",
+                  "example": "Thu, 02 Jan 2025 04:11:13 GMT"
+                }
+              },
+              "Connection": {
+                "schema": {
+                  "type": "string",
+                  "example": "keep-alive"
+                }
+              },
+              "Keep-Alive": {
+                "schema": {
+                  "type": "string",
+                  "example": "timeout=5"
+                }
+              }
+            },
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"project_id\",\"user_id\",\"name\",\"description\",\"status\",\"created_at\",\"updated_at\",\"Total time spent\"\n1001,1001,\"Time_Tracker_API\",\"A RESTful API for time tracking.\",\"active\",\"2024-12-24 16:52:56\",\"2024-12-24 16:52:56\",\"132 hours 22 minutes\"\n1002,1001,\"Mental Journal\",\"A web app that provides users a way to write their mental state. Options are available that the user can select to categorize thier journal entry and they can also select their mood.\",\"active\",\"2024-12-24 16:55:10\",\"2024-12-24 16:55:10\",\"0 hours 0 minutes\"\n1009,1001,\"Coffee Shop\",\"A static website for a coffee shop showcasing the environment and the products sold by the shop and the top products as well.\",\"active\",\"2024-12-25 12:35:25\",\"2024-12-25 12:35:25\",\"0 hours 0 minutes\"\n1010,1003,\"Coffee Shop v2\",\"A static website for a coffee shop showcasing the environment and the products sold by the shop and the top products as well including add to cart option.\",\"active\",\"2024-12-25 12:40:32\",\"2024-12-25 12:40:32\",\"0 hours 0 minutes\"\n1011,1004,\"Time Tracker API V2\",\"A RESTful API designed to help freelancers track time spent on various projects and generate work summaries. The API includes user management, project tracking, and time tracking functionalities.\",\"active\",\"2024-12-31 15:51:12\",\"2024-12-31 15:51:12\",\"1 hours 24 minutes\"\n1012,1008,\"Time Tracker API V3\",\"A RESTful API designed to help freelancers track time spent on various projects and generate work summaries. The API includes user management, project tracking, and time tracking functionalities.\",\"active\",\"2025-01-01 16:31:42\",\"2025-01-01 16:31:42\",\"0 hours 0 minutes\"\n1013,1009,\"Time Tracker API V4\",\"A RESTful API designed to help freelancers track time spent on various projects and generate work summaries. The API includes user management, project tracking, and time tracking functionalities.\",\"active\",\"2025-01-02 09:15:48\",\"2025-01-02 09:15:48\",\"0 hours 0 minutes\"\n1015,1009,\"Time Tracker API V5\",\"A RESTful API designed to help freelancers track time spent on various projects and generate work summaries. The API includes user management, project tracking, and time tracking functionalities.\",\"active\",\"2025-01-02 09:20:13\",\"2025-01-02 09:20:13\",\"0 hours 0 minutes\""
+              }
             }
           }
         }

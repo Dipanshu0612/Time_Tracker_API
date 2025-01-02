@@ -86,7 +86,7 @@ router.post("/verify-user", async (req: Request, res: Response) => {
     .select("Password")
     .where("user_id", "=", user_id)
     .execute();
-  if (!result) {
+  if (result.length === 0) {
     res.status(404).json({ message: `No user found with ID ${user_id}!` });
     return;
   }
