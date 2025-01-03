@@ -1,7 +1,6 @@
 import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import router from "./routes/api_routes.js";
-import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUI from 'swagger-ui-express';
 import SwaggerFile from './openapi.json' assert { type: "json" };
 
