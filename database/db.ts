@@ -12,13 +12,6 @@ if (!DB_URL) {
 }
 const parsedUrl = new URL(DB_URL);
 
-console.log(
-  parsedUrl.pathname.slice(1),
-  parsedUrl.hostname,
-  parsedUrl.username,
-  parsedUrl.password
-);
-
 const dialect = new MysqlDialect({
   pool: createPool({
     database: parsedUrl.pathname.slice(1),
