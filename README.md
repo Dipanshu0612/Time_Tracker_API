@@ -124,3 +124,6 @@ A RESTful API designed to help freelancers track time spent on various projects 
 3. Run the server
    ```bash
    npm run dev
+
+### View the API Documentation
+https://timetrackingtool.apidocumentation.com/
