@@ -2,15 +2,30 @@ import { Database } from "./kysely.js";
 import { createPool } from "mysql2";
 import { Kysely, MysqlDialect } from "kysely";
 import { configDotenv } from "dotenv";
+import url from "url";
+
 configDotenv();
+
+const DB_URL = process.env.DB;
+if (!DB_URL) {
+  throw new Error("DB_URL is not defined");
+}
+const parsedUrl = new URL(DB_URL);
+
+console.log(
+  parsedUrl.pathname.slice(1),
+  parsedUrl.hostname,
+  parsedUrl.username,
+  parsedUrl.password
+);
 
 const dialect = new MysqlDialect({
   pool: createPool({
-    database: process.env.DB_NAME,
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    port: 3306,
+    database: parsedUrl.pathname.slice(1),
+    host: parsedUrl.hostname,
+    user: parsedUrl.username,
+    password: parsedUrl.password,
+    port: 19880,
     connectionLimit: 10,
   }),
 });
